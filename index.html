@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prépa Nice-Cannes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F2EF; --panel:#F4F1EE; --card:#FFFFFF; --ink:#151515; --muted:#8C8781; --soft:#B9B4AE; --line:#E8E4E0;
+  --shadow:0 1px 2px rgba(21,21,21,.04),0 6px 20px rgba(21,21,21,.05);
+  --z-w:#2EAA5C; --z-e:#2EAA5C; --z-c:#1B7A3E; --z-a:#F08A24; --z-v:#C62F2F; --z-l:#3B7DDD; --z-r:#E2DCD5; --z-p:#CFC9C2;
+  --chip:#E6F27C; --chip-ink:#2A2F00; --btn:#151515; --btn-ink:#FFFFFF; --scrim:rgba(20,18,16,.45); --tag:#F1EEEA;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121110; --panel:#191817; --card:#22201F; --ink:#F3F1EE; --muted:#9D978F; --soft:#5E5953; --line:#34302D;
+    --shadow:0 1px 2px rgba(0,0,0,.3);
+    --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121110; --panel:#191817; --card:#22201F; --ink:#F3F1EE; --muted:#9D978F; --soft:#5E5953; --line:#34302D;
+  --shadow:0 1px 2px rgba(0,0,0,.3);
+  --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 Inter,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* navigation */
+nav.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav.top .in{max-width:760px;margin:0 auto;display:flex;gap:28px;padding:16px 20px;overflow-x:auto}
+nav.top button{display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600;color:var(--muted);white-space:nowrap;padding:0}
+nav.top button svg{width:20px;height:20px}
+nav.top button[aria-selected="true"]{color:var(--ink)}
+
+main{max-width:760px;margin:0 auto;padding:22px 16px 60px}
+.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin:0 4px 18px}
+.intro h1{font-size:28px;line-height:1.1;margin:0;font-weight:700;letter-spacing:-.01em}
+.intro p{margin:4px 0 0;color:var(--muted)}
+.intro .cd{text-align:right;color:var(--muted);font-size:14px}
+.intro .cd b{display:block;color:var(--ink);font-size:28px;font-weight:700;line-height:1}
+
+/* sélecteur de semaine */
+.weeks{display:flex;gap:8px;overflow-x:auto;margin:0 -16px 16px;padding:2px 16px 6px;scrollbar-width:none}
+.weeks::-webkit-scrollbar{display:none}
+.wk{flex:0 0 auto;padding:9px 16px;border-radius:999px;background:var(--card);box-shadow:var(--shadow);font-weight:600;font-size:15px;color:var(--muted)}
+.wk small{font-weight:500;margin-left:6px}
+.wk[aria-pressed="true"]{background:var(--btn);color:var(--btn-ink)}
+
+/* cartes */
+.card{background:var(--card);border-radius:26px;box-shadow:var(--shadow);padding:22px 24px;margin-bottom:16px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:18px}
+.stats>div{padding-left:18px;border-left:1px solid var(--line)}
+.stats>div:first-child{padding-left:0;border-left:0}
+.stats .lbl{color:var(--muted);font-size:15px}
+.stats .val{font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.25}
+.stats .val.rng{font-size:26px}
+.stats .val .to{font-style:normal;font-weight:400;color:var(--muted);font-size:.62em;margin:0 .3em;vertical-align:.1em;letter-spacing:0}
+.stats .val small{font-size:15px;font-weight:500;color:var(--muted);margin-left:2px}
+.bolts{display:flex;gap:3px;margin-top:8px}
+.bolts svg{width:15px;height:20px;fill:var(--ink)}
+.bolts svg.off{fill:var(--soft)}
+
+.week-sum{background:var(--btn);color:var(--btn-ink);box-shadow:none;margin-bottom:24px}
+.week-sum .sum-tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 10px;border-radius:999px;background:rgba(127,127,127,.25);margin-bottom:10px}
+.week-sum .stats>div{border-left-color:rgba(127,127,127,.35)}
+.week-sum .stats .lbl,.week-sum .stats .val small,.week-sum p{color:rgba(127,127,127,1)}
+.week-sum .stats .lbl{color:inherit;opacity:.65}
+.week-sum .stats .val small{color:inherit;opacity:.6}
+.week-sum p{color:inherit;opacity:.65}
+.week-sum .stats .val{font-size:32px}
+.wbar{height:6px;border-radius:3px;background:rgba(127,127,127,.3);margin-top:18px;overflow:hidden}
+.wbar i{display:block;height:100%;background:var(--z-e);border-radius:3px}
+.week-sum h2{font-size:22px;margin:0;font-weight:700}
+.week-sum p{margin:2px 0 0;font-size:15px}
+
+.session{display:block;width:100%;text-align:left;position:relative}
+.session .head{display:grid;grid-template-columns:1fr 20px;gap:16px;align-items:center}
+.thumb{width:56px;height:56px;border-radius:16px;background:var(--tag);display:flex;align-items:flex-end;gap:0;padding:10px 8px;overflow:hidden}
+.thumb i{display:block;border-radius:1.5px;flex:0 0 auto}
+.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;color:var(--muted);font-weight:500;font-size:16px}
+.chip{background:var(--chip);color:var(--chip-ink);font-size:12px;font-weight:700;letter-spacing:.02em;padding:4px 10px;border-radius:999px}
+.cat-ef{background:var(--z-e);color:#fff}
+.cat-vma{background:var(--z-v);color:#fff}
+.cat-spe{background:var(--z-a);color:#2B1400}
+.cat-sl{background:var(--z-l);color:#fff}
+.session::before{content:"";position:absolute;left:0;top:22px;bottom:22px;width:5px;border-radius:0 4px 4px 0;background:var(--c)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 18px;margin:0 4px 16px;font-size:14px;color:var(--muted);font-weight:500}
+.legend span{display:inline-flex;align-items:center;gap:7px}
+.legend i{width:12px;height:12px;border-radius:4px;display:inline-block}
+.today-chip{background:var(--btn);color:var(--btn-ink)}
+.session h3{margin:2px 0 0;font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.chev{width:20px;height:20px;color:var(--ink)}
+.session.done h3{color:var(--muted)}
+.done-mark{display:inline-flex;align-items:center;gap:5px;color:var(--ink);font-weight:600;font-size:14px}
+.done-mark i{width:18px;height:18px;border-radius:50%;background:var(--z-e);display:grid;place-items:center;font-style:normal;font-size:11px;color:#fff}
+.race-card{outline:2px solid var(--z-a);outline-offset:-2px}
+
+/* panneau séance */
+.scrim{position:fixed;inset:0;background:var(--scrim);z-index:20;opacity:0;pointer-events:none}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(480px,100%);background:var(--panel);z-index:21;transform:translateX(100%);display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top,0px)}
+.open .scrim{opacity:1;pointer-events:auto}
+.open .sheet{transform:none}
+@media (prefers-reduced-motion:no-preference){
+  .scrim{transition:opacity .2s}
+  .sheet{transition:transform .28s cubic-bezier(.2,.8,.2,1)}
+}
+.sheet-top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:14px 16px 10px}
+.round{width:48px;height:48px;border-radius:50%;background:var(--card);box-shadow:var(--shadow);display:grid;place-items:center}
+.round svg{width:18px;height:18px}
+.sheet-top h2{margin:0;text-align:center;font-size:22px;font-weight:500;letter-spacing:-.01em}
+.sheet-body{flex:1;overflow-y:auto;padding:4px 16px 120px}
+.sheet .card{border-radius:24px;padding:20px 20px}
+.desc{margin:0;color:var(--muted);font-size:17px;line-height:1.55}
+.desc b{color:var(--ink);font-weight:600}
+.ins-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.ins-head h3{margin:0;font-size:20px;font-weight:700}
+.tag{background:var(--tag);font-size:12px;font-weight:700;letter-spacing:.02em;padding:5px 10px;border-radius:999px}
+.chart{position:relative;height:96px;margin-bottom:22px;display:flex;align-items:flex-end;gap:3px;
+  background:repeating-linear-gradient(to bottom,transparent 0,transparent 15px,var(--line) 15px,var(--line) 16px) top/100% 48px no-repeat}
+.chart i{display:block;border-radius:4px;min-width:3px}
+.step{position:relative;border:1px solid var(--line);border-radius:20px;padding:16px 18px;margin-top:14px;background:var(--card)}
+.step.has-sec{margin-top:26px}
+.sec{text-transform:uppercase;position:absolute;top:-12px;left:20px;background:var(--tag);border:1px solid var(--line);font-size:12px;font-weight:700;letter-spacing:.02em;padding:3px 10px;border-radius:999px}
+.it{display:grid;grid-template-columns:4px 1fr;gap:14px}
+.it+.it{margin-top:14px}
+.it>i{border-radius:3px}
+.it .n{color:var(--muted);font-weight:500;font-size:17px}
+.it .v{font-size:20px;color:var(--muted);letter-spacing:-.01em}
+.it .v b{color:var(--ink);font-weight:600}
+.it .x{display:block;color:var(--muted);font-size:14px;margin-top:2px}
+.rep{display:grid;grid-template-columns:1fr 52px;padding:0;overflow:hidden}
+.rep .l{padding:16px 18px}
+.rep .r span{font-size:17px}
+.x.plan{display:block;color:var(--muted);font-size:14px;margin:12px 0 0 18px}
+.rep .r{background:var(--tag);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-weight:700;font-size:20px;text-align:center;line-height:1.1;padding:6px 4px}
+.rep .r small{font-size:11px;font-weight:600;color:var(--muted)}
+.rep .r svg{width:16px;height:16px}
+.coach{display:grid;grid-template-columns:44px 1fr;gap:14px;align-items:start}
+.avatar{width:44px;height:44px;border-radius:14px;background:var(--z-a);color:#fff;display:grid;place-items:center;font-weight:700}
+.coach h4{margin:0 0 4px;font-size:17px}
+.coach p{margin:0;color:var(--muted);font-size:15px}
+.coach p+p{margin-top:6px}
+.est{color:var(--muted);font-size:13px;margin:4px 4px 0}
+.actions{position:absolute;left:0;right:0;bottom:0;padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));background:linear-gradient(to top,var(--panel) 70%,transparent)}
+.validate{width:100%;height:60px;border-radius:20px;background:var(--btn);color:var(--btn-ink);font-weight:600;font-size:18px}
+.validate.on{background:var(--z-e);color:#fff}
+
+/* allures */
+.panel-title{font-size:20px;font-weight:700;margin:0 0 4px}
+.panel-sub{margin:0 0 16px;color:var(--muted)}
+.vma{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.vma input{width:96px;font:600 24px Inter,sans-serif;padding:8px 12px;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{padding:10px 10px;text-align:left;border-top:1px solid var(--line);white-space:nowrap}
+thead th{border-top:0;color:var(--muted);font-weight:500;font-size:13px}
+td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-align:-3px;margin-right:10px}
+.foot{color:var(--muted);font-size:13px;margin:26px 4px 0;line-height:1.6}
+.foot p{margin:0 0 6px}
+[hidden]{display:none!important}
+@media (max-width:520px){
+  .card{padding:18px 18px;border-radius:22px}
+  .stats .val{font-size:20px}
+  .stats{grid-template-columns:1fr 1.15fr .85fr}
+  .stats .val small{font-size:12px}
+  .stats .val.rng{font-size:20px}
+  .stats>div{padding-left:12px}
+  .session h3{font-size:19px}
+  .session .head{grid-template-columns:1fr 18px;gap:12px}
+  .thumb{width:48px;height:48px;padding:8px 6px}
+  nav.top .in{gap:20px}
+}
+</style>
+</head>
+<body>
+<nav class="top"><div class="in" role="tablist">
+  <button role="tab" aria-selected="true" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Séances</button>
+  <button role="tab" aria-selected="false" data-tab="allures"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19a9 9 0 1 1 16 0"/><path d="M12 14l4-5"/></svg>Allures</button>
+</div></nav>
+
+<main>
+  <section id="plan">
+    <div class="intro">
+      <div><h1>Prépa Nice&#8209;Cannes</h1><p>Plan de Bruno, ACV Vélizy</p></div>
+      <div class="cd"><b id="cd">–</b><span id="cdl">jours</span></div>
+    </div>
+    <div class="weeks" id="weeks" aria-label="Semaines"></div>
+    <div class="legend"><span><i style="background:var(--z-e)"></i>Endurance, footing, côtes</span><span><i style="background:var(--z-v)"></i>VMA</span><span><i style="background:var(--z-a)"></i>Allure spé</span><span><i style="background:var(--z-l)"></i>Sortie longue</span><span><i style="background:var(--z-r)"></i>Récup</span></div>
+    <div id="list"></div>
+  </section>
+
+  <section id="allures" hidden>
+    <div class="card">
+      <h2 class="panel-title">Ta VMA</h2>
+      <p class="panel-sub">Toutes les allures du plan se recalculent à partir de ce chiffre. Valeur retenue : 18.5 km/h (le fichier du coach indiquait 18).</p>
+      <div class="vma"><input id="vmaIn" type="number" step="0.1" min="10" max="25" inputmode="decimal" aria-label="VMA en km/h"><span>km/h, soit <b id="vmaPace"></b> /km à 100 %</span></div>
+    </div>
+    <div class="card">
+      <h2 class="panel-title">Zones d'entraînement</h2>
+      <p class="panel-sub">Pourcentages du tableau du coach, sauf l'EF que tu as fixée à 5:50 - 6:00 /km.</p>
+      <div class="scroll"><table id="zones"></table></div>
+    </div>
+    <div class="card">
+      <h2 class="panel-title">Temps de passage</h2>
+      <p class="panel-sub">Pour tes fractions sur piste. En orange, les allures autour de ton allure spé (4:15, 4:10, 4:05).</p>
+      <div class="scroll"><table id="splits"></table></div>
+    </div>
+  </section>
+
+  <div class="foot">
+    <p>Semaines de 1 à 6, puis semaine de course. Tes jours : mardi endurance, mercredi VMA, jeudi endurance, vendredi allure spé, dimanche sortie longue.</p>
+    <p>VMA 18.5 km/h. EF et footing à 5:50 - 6:00 /km, utilisés aussi pour calculer les km. Durées et distances sont des estimations, calculées avec le max des séries, répétitions et durées du plan. Retour au calme de 10 min en EF ajouté aux séances VMA et allure spé. La difficulté est une lecture du plan, pas une indication du coach.</p>
+    <p>Toutes les séances peuvent se faire en nature. Sur le dernier cycle, le kilométrage baisse progressivement.</p>
+  </div>
+</main>
+
+<div id="sheetWrap">
+  <div class="scrim" id="scrim"></div>
+  <aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-top">
+      <button class="round" id="closeBtn" aria-label="Fermer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <h2 id="sheetTitle"></h2><span></span>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+    <div class="actions"><button class="validate" id="validate">Valider ma séance</button></div>
+  </aside>
+</div>
+
+<script>
+(function(){
+  const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v);}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+  let VMA=store.get('acvv-vma2',18.5);
+  let done=store.get('acvv-done2',{});
+  const SPE=[250,255], SPEmid=252.5, EF=[350,360], EFcalc=[350,360];
+  const efPace=m=>m==='lo'?EFcalc[1]:m==='hi'?EFcalc[0]:(EFcalc[0]+EFcalc[1])/2;
+
+  // ---------- outils ----------
+  const paceAt=p=>3600/(VMA*p/100);
+  const fp=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+  const fd=s=>{s=Math.round(s);const m=Math.floor(s/60),x=s%60;return m?m+'\''+(x?String(x).padStart(2,'0')+'"':''):x+'"';};
+  const mid=a=>a.reduce((t,x)=>t+x,0)/a.length;
+  const val=(x,m)=>Array.isArray(x)?(m==='lo'?x[0]:m==='hi'?x[1]:(x[0]+x[1])/2):x;
+
+  // ---------- éléments de séance ----------
+  const WU={section:'Échauffement',z:'w',n:'Footing',q:'20 min',min:20,ef:1};
+  const END=(q,min)=>({z:'e',n:'Endurance',q,min,ef:1});
+  const SPEb=(d)=>({z:'a',n:'Allure spé',q:d+' m',dist:d,spe:true});
+  const REC=(q,min,dist)=>({z:'r',n:'Récup active',q,min,dist,rec:true});
+  const PPG={z:'p',n:'Renforcement',q:'PPG',chart:12};
+  const STR={z:'p',n:'Étirements',q:'en fin de séance'};
+  const LD=(q,n,sp)=>({z:'c',n:'Lignes droites',q,spikes:n,sp,note:'Entretien de la vitesse'});
+
+  const WEEKS=[
+    {start:'2026-09-21',s:[
+      {d:1,t:'Endurance + vitesse',desc:'<b>30 à 45 min d\'endurance</b>, puis <b>5 à 10 lignes droites</b> pour entretenir la vitesse. Termine par du renforcement et des étirements.',b:[END('30 à 45 min',[30,45]),LD('5 à 10',7,[5,10]),PPG,STR]},
+      {d:2,t:'VMA courte 36"/36"',desc:'<b>1 à 2 séries de 6 à 10 fractions de 36"</b> à 100–105 % de ta VMA, entrecoupées de 36" de récup.',b:[WU,{rep:'1 à 2 séries de 6 à 10',nm:12,n:[6,20],it:[{z:'v',n:'VMA courte',q:'36"',sec:36,pct:[100,105]},{z:'r',n:'Récup',q:'36"',sec:36,rec:true}]}]},
+      {d:3,t:'Footing + côtes',desc:'<b>40 min de footing</b>, puis <b>10 montées de 100 m</b> dans une côte moyenne. Récup en redescendant en footing.',b:[{z:'w',n:'Footing',q:'40 min',min:40,ef:1},{rep:'10',nm:10,it:[{z:'c',n:'Côte moyenne',q:'100 m',dist:100,min:.4},{z:'r',n:'Retour en footing',q:'descente',dist:100,rec:true}]}]},
+      {d:4,key:1,t:'Allure spé 3000, 4000, 3000',desc:'Trois blocs de <b>3000, 4000 et 3000 m</b> à ton allure marathon, avec environ <b>2 min de récup active</b> entre chaque.',b:[WU,SPEb(3000),REC('≈ 2 min',2),SPEb(4000),REC('≈ 2 min',2),SPEb(3000)]},
+      {d:6,key:1,t:'Sortie longue',desc:'<b>2 h à 2 h 15</b> en EF, à <b>5:50 - 6:00 /km</b>.',b:[{z:'e',n:'Endurance',q:'2 h à 2 h 15',min:[120,135],ef:1,c65:1}]}
+    ]},
+    {start:'2026-09-28',s:[
+      {d:1,t:'Endurance + renforcement',desc:'<b>45 min à 1 h d\'endurance</b>, puis du renforcement et des étirements.',b:[END('45 min à 1 h',[45,60]),PPG,STR]},
+      {d:2,t:'VMA 300 m',desc:'<b>6 à 10 × 300 m</b> à 95–100 % de ta VMA, récup active sur 100 m.',b:[WU,{rep:'6 à 10',nm:8,n:[6,10],it:[{z:'v',n:'VMA 95–100 %',q:'300 m',dist:300,pct:[95,100]},REC('100 m',null,100)]}]},
+      {d:3,t:'Endurance',desc:'<b>45 min à 1 h</b> en endurance.',b:[END('45 min à 1 h',[45,60])]},
+      {d:4,key:1,t:'Allure spé 5000, 4000, 3000',desc:'Trois blocs de <b>5000, 4000 et 3000 m</b> à ton allure marathon, avec environ <b>2 min de récup active</b> entre chaque.',b:[WU,SPEb(5000),REC('≈ 2 min',2),SPEb(4000),REC('≈ 2 min',2),SPEb(3000)]},
+      {d:6,key:1,t:'Blocs allure spé',desc:'<b>40 min de footing</b>, puis <b>3 × 20 min</b> à ton allure marathon.',b:[{z:'w',n:'Footing',q:'40 min',min:40,ef:1},{rep:'3',nm:3,it:[{z:'a',n:'Allure spé',q:'20 min',min:20,spe:true},REC('≈ 5 min',5)]}],note:'La récup entre les blocs est notée 5" dans le fichier. Sans doute 5 minutes : à confirmer avec Bruno.'}
+    ]},
+    {start:'2026-10-05',s:[
+      {d:1,t:'Endurance + vitesse',desc:'<b>45 min à 1 h d\'endurance</b>, puis <b>5 à 10 lignes droites</b>. Termine par du renforcement et des étirements.',b:[END('45 min à 1 h',[45,60]),LD('5 à 10',7,[5,10]),PPG,STR]},
+      {d:2,t:'VMA 400 m',desc:'<b>8 à 10 × 400 m</b> à 95 % de ta VMA, récup active sur 100 m (environ 50").',b:[WU,{rep:'8 à 10',nm:9,n:[8,10],it:[{z:'v',n:'VMA 95 %',q:'400 m',dist:400,pct:[95]},REC('100 m, ≈ 50"',null,100)]}]},
+      {d:3,t:'Endurance',desc:'<b>45 min à 1 h</b> en endurance.',b:[END('45 min à 1 h',[45,60])]},
+      {d:4,key:1,t:'Allure spé 2000, 3000, 3000, 2000',desc:'Quatre blocs de <b>2000, 3000, 3000 et 2000 m</b> à ton allure marathon, avec environ <b>2 min de récup active</b> entre chaque.',b:[WU,SPEb(2000),REC('≈ 2 min',2),SPEb(3000),REC('≈ 2 min',2),SPEb(3000),REC('≈ 2 min',2),SPEb(2000)]},
+      {d:6,key:1,t:'Sortie longue',desc:'<b>2 h à 2 h 15</b> en EF, à <b>5:50 - 6:00 /km</b>.',b:[{z:'e',n:'Endurance',q:'2 h à 2 h 15',min:[120,135],ef:1,c65:1}],note:'Ce dimanche 11 octobre, le 5 ou 10 km de Vélizy est possible (onglet reprise du fichier). À caler avec Bruno.'}
+    ]},
+    {start:'2026-10-12',s:[
+      {d:1,t:'Endurance',desc:'<b>30 à 45 min</b> en endurance, puis des étirements.',b:[END('30 à 45 min',[30,45]),STR]},
+      {d:3,t:'Endurance + souplesse',desc:'<b>45 min</b> en endurance, puis des assouplissements.',b:[END('45 min',45),{z:'p',n:'Assouplissements',q:'en fin de séance'}]},
+      {d:4,key:1,t:'Allure spé 2000 m',desc:'<b>4 à 6 × 2000 m</b> à ton allure marathon, récup active courte sur 100 m, <b>1 min maxi</b>.',b:[WU,{rep:'4 à 6',nm:5,n:[4,6],it:[SPEb(2000),REC('100 m, 1 min maxi',1,100)]}]},
+      {d:6,key:1,t:'Blocs allure spé',desc:'<b>40 min de footing</b>, puis <b>2 × 30 min</b> à ton allure marathon.',b:[{z:'w',n:'Footing',q:'40 min',min:40,ef:1},{rep:'2',nm:2,it:[{z:'a',n:'Allure spé',q:'30 min',min:30,spe:true},REC('≈ 5 min',5)]}],note:'La récup entre les blocs est notée 5" dans le fichier. Sans doute 5 minutes : à confirmer avec Bruno. Pas de séance VMA prévue cette semaine.'}
+    ]},
+    {start:'2026-10-19',s:[
+      {d:2,t:'VMA 400 m',desc:'<b>6 à 8 × 400 m</b> à environ 95 % de ta VMA, récup active sur 100 m (45").',b:[WU,{rep:'6 à 8',nm:7,n:[6,8],it:[{z:'v',n:'VMA 95 %',q:'400 m',dist:400,pct:[95]},REC('100 m, 45"',null,100)]}],note:'Version en nature : 1\'30" vite / 45" de récup.'},
+      {d:3,t:'Endurance',desc:'<b>1 h 15</b> en endurance.',b:[END('1 h 15',75)]},
+      {d:4,key:1,t:'Allure spé 4000, 3000, 2000',desc:'Trois blocs de <b>4000, 3000 et 2000 m</b> à ton allure marathon, récup active sur 1 tour, <b>2 min maxi</b>.',b:[WU,SPEb(4000),REC('1 tour, 2 min maxi',2,400),SPEb(3000),REC('1 tour, 2 min maxi',2,400),SPEb(2000)]},
+      {d:6,key:1,t:'Sortie longue spécifique',desc:'<b>2 h 15</b> en endurance, <b>dont 1 h à allure marathon</b>.',b:[{z:'e',n:'Endurance',q:'1 h 15 en tout',min:75,ef:1,c65:1,split:[40,35]},{z:'a',n:'Allure spé',q:'1 h',min:60,spe:true}],note:'Le plan ne précise pas à quel moment placer l\'heure à allure spé.'}
+    ]},
+    {start:'2026-10-26',s:[
+      {d:2,t:'VMA 300 m',desc:'<b>8 à 10 × 300 m</b> à 95 % de ta VMA, récup active sur 100 m (45").',b:[WU,{rep:'8 à 10',nm:9,n:[8,10],it:[{z:'v',n:'VMA 95 %',q:'300 m',dist:300,pct:[95]},REC('100 m, 45"',null,100)]}],note:'Version en nature : 1\' vite / 45" de récup.'},
+      {d:3,t:'Endurance',desc:'<b>40 min</b> en endurance.',b:[END('40 min',40)]},
+      {d:4,key:1,t:'Allure spé 3000, 2000, 1000',desc:'Trois blocs de <b>3000, 2000 et 1000 m</b> à ton allure objectif, récup active sur 1 tour, <b>2 min maxi</b>.',b:[WU,SPEb(3000),REC('1 tour, 2 min maxi',2,400),SPEb(2000),REC('1 tour, 2 min maxi',2,400),SPEb(1000)]},
+      {d:6,key:1,t:'Sortie longue',desc:'<b>1 h 30</b> en endurance, <b>dont 30 min à allure marathon</b>.',b:[{z:'e',n:'Endurance',q:'1 h en tout',min:60,ef:1,split:[35,25]},{z:'a',n:'Allure spé',q:'30 min',min:30,spe:true}]}
+    ]},
+    {start:'2026-11-02',s:[
+      {d:1,t:'Footing + lignes droites',desc:'<b>30 min de footing</b>, des assouplissements, puis <b>8 à 10 lignes droites</b> et un retour en footing.',b:[{z:'w',n:'Footing',q:'30 min',min:30,ef:1},{z:'p',n:'Assouplissements',q:'après le footing'},LD('8 à 10',9,[8,10]),{z:'w',n:'Retour en footing',q:'pour finir',ef:1}]},
+      {d:3,t:'Endurance',desc:'<b>40 min</b> en endurance.',b:[END('40 min',40)]},
+      {d:6,race:1,t:'Marathon Nice-Cannes',desc:'Le jour J. <b>42.195 km</b> à ton allure objectif.',b:[{z:'a',n:'Allure spé',q:'42.195 km',dist:42195,spe:true}]}
+    ]}
+  ];
+
+  const CAT={ef:'ENDURANCE',vma:'VMA',spe:'ALLURE SPÉ',sl:'SORTIE LONGUE'};
+  const RAC={section:'Retour au calme',z:'w',n:'EF',q:'5 à 10 min',min:[5,10],ef:1};
+  const DAYN=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
+  const MON=['janv.','févr.','mars','avr.','mai','juin','juil.','août','sept.','oct.','nov.','déc.'];
+  const parse=s=>{const[y,m,d]=s.split('-').map(Number);return new Date(y,m-1,d);};
+  const add=(d,n)=>{const x=new Date(d);x.setDate(x.getDate()+n);return x;};
+  const same=(a,b)=>a.toDateString()===b.toDateString();
+  const fdate=d=>d.getDate()+' '+MON[d.getMonth()];
+  const today=new Date();today.setHours(0,0,0,0);
+  const ALL=[];
+  WEEKS.forEach((w,wi)=>{const st=parse(w.start);w.s.forEach((s,i)=>{
+    s.cat = s.race?'spe' : s.d===2?'vma' : s.d===4?'spe' : s.d===6?'sl' : 'ef';
+    if(s.cat==='vma'||(s.cat==='spe'&&!s.race)) s.b=s.b.concat([RAC]);
+    s.b=s.b.map(b=>{
+      if(b.rep&&Array.isArray(b.n)){ const plan=b.rep; const mx=b.n[1];
+        const lbl=plan.includes('séries')?plan.replace(/(\d+) à (\d+)/g,'$2'):String(mx);
+        return Object.assign({},b,{plan,rep:lbl,n:mx,nm:mx}); }
+      if(b.spikes&&Array.isArray(b.sp)){ return Object.assign({},b,{plan:b.q,q:String(b.sp[1]),spikes:b.sp[1],sp:b.sp[1]}); }
+      if(!b.rep&&Array.isArray(b.min)){ const L={'30 à 45 min':'45 min','45 min à 1 h':'1 h','2 h à 2 h 15':'2 h 15','5 à 10 min':'10 min'};
+        return Object.assign({},b,{planDur:b.section==='Retour au calme'?null:b.q,q:L[b.q]||b.q,min:b.min[1]}); }
+      return b; });    s.desc=s.desc.replace(/(\d+) à (\d+) (?=×|lignes|séries|fractions)/g,'$2 ').replace('30 à 45 min','45 min').replace('45 min à 1 h','1 h').replace('2 h à 2 h 15','2 h 15');
+    if(s.cat==='sl'){ const L=x=>Object.assign({},x,{z:(x.z==='w'||x.z==='e')?'l':x.z}); s.b=s.b.map(b=>b.rep?Object.assign({},b,{it:b.it.map(L)}):L(b)); }s.date=add(st,s.d);s.id=wi+'-'+s.d;s.wi=wi;s.idx=i+1;s.of=w.s.length;ALL.push(s);});});
+
+  // ---------- estimations ----------
+  function estItem(it,m){
+    let t=0,d=0; const mn=val(it.min,m);
+    const p = it.spe?SPEmid : it.ef?efPace(m) : it.pct?paceAt(mid(it.pct)) : efPace(m);
+    if(it.min!=null && it.dist==null && it.sec==null && !(it.pct||it.spe||it.rec||it.ef)){ t=mn*60; }
+    else if(it.sec){ t=it.sec; d=t/p*1000; }
+    else if(it.dist!=null){ d=it.dist; t=it.min!=null&&!it.rec?mn*60:d/1000*p; if(it.rec&&it.min!=null)t=mn*60; }
+    else if(it.min!=null){ t=mn*60; d=t/p*1000; }
+    return [t,d];
+  }
+  function estimate(s,m){
+    let t=0,d=0;
+    s.b.forEach(b=>{
+      if(b.rep){ const N=b.n?val(b.n,m):b.nm; b.it.forEach((it,k)=>{const[a,c]=estItem(it,m);const n=k===b.it.length-1&&it.rec?N-1:N;t+=a*n;d+=c*n;}); }
+      else if(b.spikes){ t+=(b.sp?val(b.sp,m):b.spikes)*25; }
+      else { const[a,c]=estItem(b,m);t+=a;d+=c; }
+    });
+    return [t,d];
+  }
+  function difficulty(s,t){
+    const Z={w:1,e:1,l:1,c:2,r:0,p:1,a:3,v:4};let m=0;
+    const scan=it=>{m=Math.max(m,Z[it.z]||0);};
+    s.b.forEach(b=>b.rep?b.it.forEach(scan):b.spikes?0:scan(b));
+    if(s.b.some(b=>b.spikes)) m=Math.max(m,1);
+    if(t>100*60) m+=1;
+    if(s.race) m=5;
+    return Math.min(5,m);
+  }
+
+  // ---------- barres (profil de séance) ----------
+  const H={w:.62,e:.66,l:.66,c:.9,a:.86,v:1,r:.26,p:.36};
+  function bars(s){
+    const out=[];
+    s.b.forEach(b=>{
+      if(b.rep){ const n=Math.min(b.nm,20); for(let i=0;i<n;i++){ b.it.forEach((it,k)=>{ if(k===b.it.length-1&&it.rec&&i===n-1)return; const[t]=estItem(it); out.push([it.z,Math.max(t/60,.9)]);}); } }
+      else if(b.spikes){ for(let i=0;i<b.spikes;i++){out.push(['c',.7]); if(i<b.spikes-1)out.push(['r',.5]);} }
+      else if(b.chart){ out.push([b.z,b.chart]); }
+      else if(b.split){ const[t]=estItem(b); out.push([b.z,b.split[0]]); out.push(['__insert',0]); out.push([b.z,b.split[1]]); }
+      else { const[t]=estItem(b); if(t>0) out.push([b.z,t/60]); }
+    });
+    // placer le bloc allure spé au milieu de la sortie longue (illustratif)
+    const ins=out.findIndex(x=>x[0]==='__insert');
+    if(ins>=0){ const aIdx=out.findIndex((x,i)=>i>ins&&x[0]==='a'); const a=out.splice(aIdx,1)[0]; out.splice(ins,1,a); }
+    return out;
+  }
+  const CV=z=>`var(--z-${z})`;
+  function chartHTML(s){
+    const bs=bars(s),tot=bs.reduce((t,b)=>t+b[1],0);
+    return `<div class="chart" aria-hidden="true">${bs.map(([z,m])=>`<i style="flex:${(m/tot*100).toFixed(3)} 1 0;height:${H[z]*100}%;background:${CV(z)}"></i>`).join('')}</div>`;
+  }
+  function thumbHTML(s){
+    const bs=bars(s),tot=bs.reduce((t,b)=>t+b[1],0);
+    return `<div class="thumb" aria-hidden="true">${bs.map(([z,m])=>`<i style="flex:${(m/tot*100).toFixed(3)} 1 0;height:${H[z]*100}%;background:${CV(z)}"></i>`).join('')}</div>`;
+  }
+
+  // ---------- rendu des étapes ----------
+  function paceStr(it){
+    if(it.spe) return ` à <b>4:10 - 4:15</b> /km`;
+    if(it.ef) return ` à <b>5:50 - 6:00</b> /km`;
+    if(!it.pct) return '';
+    const hi=Math.max(...it.pct),lo=Math.min(...it.pct);
+    return hi===lo?` à <b>${fp(paceAt(hi))}</b> /km`:` à <b>${fp(paceAt(hi))} - ${fp(paceAt(lo))}</b> /km`;
+  }
+  function extra(it){
+    const hi=it.pct?Math.max(...it.pct):0,lo=it.pct?Math.min(...it.pct):0;
+    if(it.spe&&it.dist){ return it.dist===42195?`Arrivée entre ${Math.floor(42.195*SPE[0]/3600)}h${String(Math.floor(42.195*SPE[0]%3600/60)).padStart(2,'0')} et ${Math.floor(42.195*SPE[1]/3600)}h${String(Math.floor(42.195*SPE[1]%3600/60)).padStart(2,'0')}`:`Soit ${fd(it.dist/1000*SPE[0])} à ${fd(it.dist/1000*SPE[1])} le bloc`; }
+    if(it.pct&&it.dist&&it.z==='v'){ const a=fd(it.dist/1000*paceAt(hi)),b=fd(it.dist/1000*paceAt(lo)); return hi===lo?`Soit ${a} la fraction`:`Soit ${a} à ${b} la fraction`; }
+    if(it.sec&&it.pct){ return `Soit environ ${Math.round(VMA*lo/100/3.6*it.sec)} à ${Math.round(VMA*hi/100/3.6*it.sec)} m par fraction`; }
+    if(it.c65) return `Repère de Bruno : environ 65 % VMA, soit ${fp(paceAt(65))} /km`;
+    return it.note||'';
+  }
+  function itemHTML(it){
+    const v = it.rec ? `<b>${it.q}</b> de récup.` : `<b>${it.q}</b>${paceStr(it)}`;
+    const x=extra(it)+(it.planDur?`${extra(it)?'. ':''}Plan de Bruno : ${it.planDur}, max retenu.`:'');
+    return `<div class="it"><i style="background:${CV(it.z)}"></i><div><div class="n">${it.n}</div><div class="v">${v}</div>${x?`<span class="x">${x}</span>`:''}</div></div>`;
+  }
+  const repIcon=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg>`;
+  function stepsHTML(s){
+    return s.b.map(b=>{
+      if(b.rep){
+        const series=b.rep.includes('séries');
+        const planTxt=b.plan?`<span class="x plan">Plan de Bruno : ${b.plan}. Max retenu.</span>`:'';
+        return `<div class="step rep"><div class="l">${b.it.map(itemHTML).join('')}${planTxt}</div><div class="r">${repIcon}<span>${series?(()=>{const[a,c]=b.rep.split(' séries de ');return a.replace(' à ','–')+'<br><small>×</small><br>'+c.replace(' à ','–');})():b.rep.replace(' à ','–')}</span>${series?'<small>séries × reps</small>':''}</div></div>`;
+      }
+      if(b.spikes){ return `<div class="step"><div class="it"><i style="background:${CV('c')}"></i><div><div class="n">${b.n}</div><div class="v"><b>${b.q}</b> lignes droites</div><span class="x">${b.note}${b.plan?`. Plan de Bruno : ${b.plan}, max retenu.`:''}</span></div></div></div>`; }
+      return `<div class="step${b.section?' has-sec':''}">${b.section?`<span class="sec">${b.section}</span>`:''}${itemHTML(b)}</div>`;
+    }).join('');
+  }
+
+  const bolt=off=>`<svg viewBox="0 0 12 18" class="${off?'off':''}"><path d="M7.5 0L0 10.5h4.8L3.6 18 12 7h-5z"/></svg>`;
+  const bolts=n=>`<div class="bolts" aria-label="Difficulté ${n} sur 5">${[1,2,3,4,5].map(i=>bolt(i>n)).join('')}</div>`;
+  const fDur=t=>{const m=Math.round(t/60);if(m<60)return `${m}<small>min</small>`;const h=Math.floor(m/60),r=m%60;return r?`${h}h${String(r).padStart(2,'0')}`:`${h}h`;};
+  const fDurR=(a,b)=>{const A=Math.round(a/60),B=Math.round(b/60);if(A===B)return fDur(a);if(B<60)return `${A}<i class="to">à</i>${B}<small>min</small>`;return fDur(a).replace(/<small>min<\/small>/,'')+'<i class="to">à</i>'+fDur(b).replace(/<small>min<\/small>/,'');};
+  const fKmR=(a,b)=>{const A=(a/1000).toFixed(1),B=(b/1000).toFixed(1);return A===B?fKm(a):`${A}<i class="to">à</i>${B}<small>km</small>`;};
+  const fKm=d=>`${(d/1000).toFixed(1)}<small>km</small>`;
+  const chev=`<svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>`;
+
+  // ---------- vues ----------
+  let sel=(()=>{let i=WEEKS.findIndex(w=>{const st=parse(w.start);return today>=st&&today<add(st,7);});if(i<0)i=today<parse(WEEKS[0].start)?0:WEEKS.length-1;return i;})();
+
+  function renderHeader(){
+    const RACE=new Date(2026,10,8),n=Math.round((RACE-today)/864e5);
+    document.getElementById('cd').textContent=n>0?n:(n===0?'Jour J':'✓');
+    document.getElementById('cdl').textContent=n>1?'jours avant le départ':n===1?'jour avant le départ':'8 nov. 2026';
+  }
+  function renderWeeks(){
+    const el=document.getElementById('weeks');
+    el.innerHTML=WEEKS.map((w,i)=>`<button class="wk" aria-pressed="${i===sel}" data-w="${i}">${i===6?'Course':'Semaine '+(i+1)}<small>${fdate(parse(w.start))}</small></button>`).join('');
+    const b=el.querySelector('[aria-pressed="true"]');if(b)b.scrollIntoView({block:'nearest',inline:'center'});
+  }
+  function renderList(){
+    const w=WEEKS[sel],st=parse(w.start);
+    let T=[0,0],D=[0,0],nd=0;
+    const cards=w.s.map(s=>{
+      const[t]=estimate(s),[tl,dl]=estimate(s,'hi'),[th,dh]=estimate(s,'hi');T[0]+=tl;T[1]+=th;D[0]+=dl;D[1]+=dh;if(done[s.id])nd++;
+      const isToday=same(s.date,today);
+      const chips=`${isToday?'<span class="chip today-chip">AUJOURD\'HUI</span>':''}<span class="chip cat-${s.cat}">${s.race?'JOUR J':CAT[s.cat]}</span>`;
+      const cv={ef:'--z-e',vma:'--z-v',spe:'--z-a',sl:'--z-l'}[s.cat];
+      return `<button class="card session${done[s.id]?' done':''}${s.race?' race-card':''}" style="--c:var(${cv})" data-id="${s.id}">
+        <div class="head"><div><div class="meta">${chips}<span>${DAYN[s.d]} ${fdate(s.date)}</span>${done[s.id]?'<span class="done-mark"><i>✓</i>Faite</span>':''}</div><h3>${s.t}</h3></div>${chev}</div>
+        <div class="stats"><div><div class="lbl">Durée</div><div class="val${Math.round(tl/60)!==Math.round(th/60)?' rng':''}">${fDurR(tl,th)}</div></div><div><div class="lbl">Distance</div><div class="val${(dl/1000).toFixed(1)!==(dh/1000).toFixed(1)?' rng':''}">${fKmR(dl,dh)}</div></div><div><div class="lbl">Difficulté</div>${bolts(difficulty(s,t))}</div></div>
+      </button>`;
+    }).join('');
+    const sum=`<div class="card week-sum"><span class="sum-tag">Résumé de la semaine</span><h2>${sel===6?'Semaine de course':'Semaine '+(sel+1)+' sur 7'}</h2><p>Du ${fdate(st)} au ${fdate(add(st,6))}, ${nd} séance${nd>1?'s':''} validée${nd>1?'s':''} sur ${w.s.length}</p>
+      <div class="stats"><div><div class="lbl">Volume</div><div class="val">${fKmR(D[0],D[1])}</div></div><div><div class="lbl">Durée</div><div class="val">${fDurR(T[0],T[1]).replace(/<small>min<\/small>/,'<small>min</small>')}</div></div><div><div class="lbl">Séances</div><div class="val">${nd}<small>/ ${w.s.length}</small></div></div></div>
+      <div class="wbar" aria-hidden="true"><i style="width:${w.s.length?nd/w.s.length*100:0}%"></i></div></div>`;
+    document.getElementById('list').innerHTML=sum+cards;
+  }
+
+  // ---------- panneau ----------
+  let current=null,lastFocus=null;
+  function openSheet(id){
+    const s=ALL.find(x=>x.id===id);if(!s)return;current=s;lastFocus=document.activeElement;
+    document.getElementById('sheetTitle').textContent=s.t;
+    const noteBlock=s.note?`<div class="card"><p class="desc"><b>À noter :</b> ${s.note}</p></div>`:'';
+    document.getElementById('sheetBody').innerHTML=
+      `<div class="card"><p class="desc">${s.desc}</p></div>
+       <div class="card"><div class="ins-head"><h3>Instructions</h3><span class="tag">${DAYN[s.d].toUpperCase()} ${fdate(s.date).toUpperCase()}</span></div>${chartHTML(s)}${stepsHTML(s)}</div>
+       ${noteBlock}`;
+    updateValidate();
+    document.getElementById('sheetWrap').classList.add('open');document.body.classList.add('lock');
+    document.getElementById('sheetBody').scrollTop=0;
+    document.getElementById('closeBtn').focus();
+  }
+  function closeSheet(){document.getElementById('sheetWrap').classList.remove('open');document.body.classList.remove('lock');current=null;if(lastFocus)lastFocus.focus();}
+  function updateValidate(){
+    const b=document.getElementById('validate');
+    if(current&&current.race){b.textContent=done[current.id]?'Marathon terminé ✓':'Valider mon marathon';}
+    else b.textContent=current&&done[current.id]?'Séance validée ✓':'Valider ma séance';
+    b.classList.toggle('on',!!(current&&done[current.id]));
+  }
+
+  // ---------- allures ----------
+  function renderAllures(){
+    document.getElementById('vmaPace').textContent=fp(paceAt(100));
+    const Z=[['w','Échauffement, footing, EF','ton choix','EF','10 min à 2 h en continu'],['e','Endurance active','75 à 85 %',[75,85],'fractions de 10 min à 1 h'],['a','Allure spé marathon','ton objectif',null,'≈ 80 % VMA'],['v','VMA longue','85 à 95 %',[85,95],'fractions de 2 à 10 min'],['v','VMA moyenne','95 à 100 %',[95,100],'fractions de 1 à 2 min'],['v','VMA courte','100 à 110 %',[100,110],'fractions de 15" à 1 min']];
+    document.getElementById('zones').innerHTML='<thead><tr><th>Zone</th><th>% VMA</th><th>Allure</th><th>Format</th></tr></thead><tbody>'+Z.map(([z,n,pc,r,f])=>{const p=r==='EF'?'5:50 - 6:00':r?(r.length>1?fp(paceAt(r[1]))+' - '+fp(paceAt(r[0])):'≈ '+fp(paceAt(r[0]))):'4:10 - 4:15';return `<tr><td class="z"><span style="background:${CV(z)}"></span>${n}</td><td>${pc}</td><td><b>${p}</b> /km</td><td>${f}</td></tr>`;}).join('')+'</tbody>';
+    const D=[100,200,300,400,800];
+    const rows=[255,250,245].map(sec=>({lbl:`${Math.round(3600/sec/VMA*1000)/10} %`,pace:sec,spe:true}))
+      .concat([90,95,100,105].map(p=>({lbl:`${p} %`,pace:paceAt(p)})));
+    document.getElementById('splits').innerHTML='<thead><tr><th>% VMA</th><th>/km</th>'+D.map(d=>`<th>${d} m</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>`<tr><td class="${r.spe?'z':''}">${r.spe?`<span style="background:var(--z-a)"></span>`:''}${r.lbl}</td><td><b>${fp(r.pace)}</b></td>${D.map(d=>`<td>${fd(d/1000*r.pace)}</td>`).join('')}</tr>`).join('')+'</tbody>';
+  }
+
+  // ---------- événements ----------
+  document.addEventListener('click',e=>{
+    const c=e.target.closest('.session');if(c){openSheet(c.dataset.id);return;}
+    const w=e.target.closest('.wk');if(w){sel=+w.dataset.w;renderWeeks();renderList();window.scrollTo({top:0});return;}
+    const t=e.target.closest('[role="tab"]');
+    if(t){document.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected',b===t));document.getElementById('plan').hidden=t.dataset.tab!=='plan';document.getElementById('allures').hidden=t.dataset.tab!=='allures';}
+  });
+  document.getElementById('scrim').addEventListener('click',closeSheet);
+  document.getElementById('closeBtn').addEventListener('click',closeSheet);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&current)closeSheet();});
+  document.getElementById('validate').addEventListener('click',()=>{if(!current)return;if(done[current.id])delete done[current.id];else done[current.id]=true;store.set('acvv-done2',done);updateValidate();renderList();});
+  const vi=document.getElementById('vmaIn');vi.value=VMA;
+  vi.addEventListener('input',e=>{const v=parseFloat(e.target.value);if(v>=10&&v<=25){VMA=v;store.set('acvv-vma2',VMA);renderAllures();renderList();}});
+
+  renderHeader();renderWeeks();renderList();renderAllures();
+})();
+</script>
+</body>
+</html>
