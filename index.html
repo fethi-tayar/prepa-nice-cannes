@@ -182,6 +182,12 @@ table.climbs .km{display:flex;align-items:center;gap:8px}
 table.climbs tr.sub td{border-top:0;padding-top:0;color:var(--muted);font-size:13px;white-space:normal}
 table.climbs tr.has-sub td{padding-bottom:4px}
 #parcours .est{margin:14px 0 0}
+.prof{touch-action:pan-y;cursor:crosshair}
+.prof .ax,.prof .xl,.prof .bd{pointer-events:none}
+.prof .cur{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--z-l);pointer-events:none}
+.prof .dot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:var(--z-l);border:2px solid var(--card);pointer-events:none;z-index:2}
+.prof .tip{position:absolute;top:-34px;transform:translateX(-50%);background:var(--btn);color:var(--btn-ink);font-size:12px;font-weight:600;padding:4px 9px;border-radius:8px;white-space:nowrap;pointer-events:none;z-index:3}
+.prof:focus-visible{outline-offset:6px}
 [hidden]{display:none!important}
 @media (max-width:520px){
   .card{padding:18px 18px;border-radius:22px}
@@ -236,8 +242,8 @@ table.climbs tr.has-sub td{padding-bottom:4px}
   <section id="parcours" hidden>
     <div class="card">
       <h2 class="panel-title">Les 5 montées</h2>
-      <p class="panel-sub">Tout est plat jusqu'au km 23. La n°3 est la plus dure : elle mène au point le plus haut du parcours, 35 m, vers le km 29.</p>
-      <div class="prof" id="prof"></div>
+      <p class="panel-sub">Tout est plat jusqu'au km 23. La n°3 est la plus dure : elle mène au point le plus haut du parcours, 35 m, vers le km 29. Passe la souris ou le doigt sur le profil pour lire l'altitude.</p>
+      <div class="prof" id="prof" tabindex="0" role="slider" aria-label="Profil d'altitude du parcours" aria-valuemin="0" aria-valuemax="42.5"></div>
       <div class="scroll"><table class="climbs" id="climbs"></table></div>
       <p class="est">Km mesurés sur le tracé GPS de l'édition 2021 (42,53 km). Marge d'environ ±300 m par rapport aux panneaux officiels. Altitudes GPS à ±3 m près.</p>
     </div>
@@ -548,7 +554,26 @@ table.climbs tr.has-sub td{padding-bottom:4px}
     h+=[20,40].map(v=>`<span class="ax" style="top:${Y(v)}%">${v} m</span>`).join('');
     h+=[0,10,20,30,40].map(k=>`<span class="xl" style="left:${k/LEN*100}%${k?'':';transform:none'}">${k}${k?'':' km'}</span>`).join('');
     h+=CLIMBS.map((c,i)=>{const top=Math.min(...seg(c).map(q=>q[1]));return `<span class="bd" style="left:calc(${(c.s+c.e)/2/LEN*100}% + ${c.dx||0}px);top:${top}%">${i+1}</span>`;}).join('');
-    document.getElementById('prof').innerHTML=h;
+    const el=document.getElementById('prof');
+    el.innerHTML=h+'<i class="cur" hidden></i><i class="dot" hidden></i><span class="tip" hidden></span>';
+    const cur=el.querySelector('.cur'),dot=el.querySelector('.dot'),tip=el.querySelector('.tip');
+    const altAt=km=>{const f=km*10,i=Math.min(Math.floor(f),PROF.length-2),t=f-i;return PROF[i]+(PROF[i+1]-PROF[i])*t;};
+    const show=km=>{
+      km=Math.max(0,Math.min(LEN,km)); el._km=km;
+      const w=el.clientWidth,ht=el.clientHeight,x=km/LEN*w,a=altAt(km);
+      const c=CLIMBS.findIndex(c=>km>=c.s&&km<=c.e);
+      tip.textContent=`km ${km.toFixed(1).replace('.',',')} · ${Math.round(a)} m${c>=0?' · montée '+(c+1):''}`;
+      [cur,dot,tip].forEach(n=>n.hidden=false);
+      cur.style.left=dot.style.left=x+'px'; dot.style.top=Y(a)/100*ht+'px';
+      const tw=tip.offsetWidth; tip.style.left=Math.max(tw/2,Math.min(w-tw/2,x))+'px';
+      el.setAttribute('aria-valuenow',km.toFixed(1)); el.setAttribute('aria-valuetext',tip.textContent);
+    };
+    const hide=()=>[cur,dot,tip].forEach(n=>n.hidden=true);
+    const kmAt=e=>{const r=el.getBoundingClientRect();return (e.clientX-r.left)/r.width*LEN;};
+    el.onpointermove=el.onpointerdown=e=>show(kmAt(e));
+    el.onpointerleave=e=>{if(e.pointerType==='mouse')hide();};
+    el.onpointercancel=el.onblur=hide;
+    el.onkeydown=e=>{const d={ArrowRight:.5,ArrowLeft:-.5}[e.key];if(d){e.preventDefault();show((el._km||0)+d);}};
     document.getElementById('climbs').innerHTML='<thead><tr><th>Début</th><th>Longueur</th><th>Gain</th><th>Pente</th></tr></thead><tbody>'
       +CLIMBS.map((c,i)=>`<tr${c.x?' class="has-sub"':''}><td><span class="km"><span class="num">${i+1}</span><b>km ${c.d}</b></span></td><td>${c.len}</td><td>+${c.g} m</td><td>${c.p}</td></tr>${c.x?`<tr class="sub"><td colspan="4">${c.x[0].toUpperCase()+c.x.slice(1)}</td></tr>`:''}`).join('')+'</tbody>';
   }
