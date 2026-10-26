@@ -169,6 +169,19 @@ thead th{border-top:0;color:var(--muted);font-weight:500;font-size:13px}
 td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-align:-3px;margin-right:10px}
 .foot{color:var(--muted);font-size:13px;margin:26px 4px 0;line-height:1.6}
 .foot p{margin:0 0 6px}
+/* parcours */
+.prof{position:relative;height:150px;margin:36px 0 34px}
+.prof svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.prof .ax{position:absolute;left:0;font-size:11px;color:var(--muted);transform:translateY(-120%)}
+.prof .xl{position:absolute;bottom:-22px;font-size:11px;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+.prof .bd,.num{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--z-a);color:#2B1400;font-size:11px;font-weight:700}
+.prof .bd{position:absolute;margin:-28px 0 0 -10px}
+table.climbs th,table.climbs td{padding:10px 6px}
+table.climbs th:first-child,table.climbs td:first-child{padding-left:0}
+table.climbs .km{display:flex;align-items:center;gap:8px}
+table.climbs tr.sub td{border-top:0;padding-top:0;color:var(--muted);font-size:13px;white-space:normal}
+table.climbs tr.has-sub td{padding-bottom:4px}
+#parcours .est{margin:14px 0 0}
 [hidden]{display:none!important}
 @media (max-width:520px){
   .card{padding:18px 18px;border-radius:22px}
@@ -188,6 +201,7 @@ td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-
 <nav class="top"><div class="in" role="tablist">
   <button role="tab" aria-selected="true" data-tab="plan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/></svg>Séances</button>
   <button role="tab" aria-selected="false" data-tab="allures"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 19a9 9 0 1 1 16 0"/><path d="M12 14l4-5"/></svg>Allures</button>
+  <button role="tab" aria-selected="false" data-tab="parcours"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 19l6.5-10 4.5 6 3-4 6 8z"/></svg>Parcours</button>
 </div></nav>
 
 <main>
@@ -216,6 +230,16 @@ td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-
       <h2 class="panel-title">Temps de passage</h2>
       <p class="panel-sub">Pour tes fractions sur piste. En orange, les allures autour de ton allure spé (4:15, 4:10, 4:05).</p>
       <div class="scroll"><table id="splits"></table></div>
+    </div>
+  </section>
+
+  <section id="parcours" hidden>
+    <div class="card">
+      <h2 class="panel-title">Les 5 montées</h2>
+      <p class="panel-sub">Tout est plat jusqu'au km 23. La n°3 est la plus dure : elle mène au point le plus haut du parcours, 35 m, vers le km 29.</p>
+      <div class="prof" id="prof"></div>
+      <div class="scroll"><table class="climbs" id="climbs"></table></div>
+      <p class="est">Km mesurés sur le tracé GPS de l'édition 2021 (42,53 km). Marge d'environ ±300 m par rapport aux panneaux officiels. Altitudes GPS à ±3 m près.</p>
     </div>
   </section>
 
@@ -305,7 +329,7 @@ td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-
     {start:'2026-11-02',s:[
       {d:1,t:'Footing + lignes droites',desc:'<b>30 min de footing</b>, des assouplissements, puis <b>8 à 10 lignes droites</b> et un retour en footing.',b:[{z:'w',n:'Footing',q:'30 min',min:30,ef:1},{z:'p',n:'Assouplissements',q:'après le footing'},LD('8 à 10',9,[8,10]),{z:'w',n:'Retour en footing',q:'pour finir',ef:1}]},
       {d:3,t:'Endurance',desc:'<b>40 min</b> en endurance.',b:[END('40 min',40)]},
-      {d:6,race:1,t:'Marathon Nice-Cannes',desc:'Le jour J. <b>42.195 km</b> à ton allure objectif.',b:[{z:'a',n:'Allure spé',q:'42.195 km',dist:42195,spe:true}]}
+      {d:6,race:1,t:'Marathon Nice-Cannes',desc:'Le jour J. <b>42.195 km</b> à ton allure objectif.',note:'Les 5 montées du parcours sont détaillées dans l\'onglet Parcours.',b:[{z:'a',n:'Allure spé',q:'42.195 km',dist:42195,spe:true}]}
     ]}
   ];
 
@@ -495,12 +519,46 @@ td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-
     document.getElementById('splits').innerHTML='<thead><tr><th>% VMA</th><th>/km</th>'+D.map(d=>`<th>${d} m</th>`).join('')+'</tr></thead><tbody>'+rows.map(r=>`<tr><td class="${r.spe?'z':''}">${r.spe?`<span style="background:var(--z-a)"></span>`:''}${r.lbl}</td><td><b>${fp(r.pace)}</b></td>${D.map(d=>`<td>${fd(d/1000*r.pace)}</td>`).join('')}</tr>`).join('')+'</tbody>';
   }
 
+  // ---------- parcours ----------
+  // altitude (m) tous les 100 m, tracé GPS Openrunner de l'édition 2021
+  const PROF=[6,7,9,10,9,8,6,8,8,8,9,9,9,9,9,9,9,9,9,10,12,12,12,12,11,12,11,7,7,7,7,7,7,7,8,9,9,10,9,7,6,7,7,8,8,7,7,9,8,8,6,6,4,4,6,8,8,9,7,7,7,8,8,9,10,11,11,11,10,9,9,12,11,12,11,10,9,8,5,8,7,7,7,6,6,5,4,4,4,4,4,6,6,6,4,5,7,6,5,6,6,6,4,3,5,7,7,4,8,11,10,6,4,2,3,3,2,3,5,6,6,5,4,4,4,4,5,6,7,6,7,7,6,5,4,4,6,7,7,7,8,9,13,12,11,12,12,10,9,7,6,6,6,7,8,9,11,12,11,9,10,8,7,6,7,6,5,4,4,6,6,9,9,6,9,11,11,10,11,7,5,6,5,5,4,3,4,4,5,4,4,5,4,4,4,3,3,3,3,3,3,3,3,4,4,4,4,3,3,3,2,3,3,4,5,5,3,3,4,4,4,4,4,4,5,5,4,3,2,4,4,5,5,6,6,4,3,3,3,3,10,10,14,14,13,11,8,10,9,13,9,6,7,6,6,6,7,7,6,6,3,6,8,6,6,7,10,6,5,9,17,17,16,16,13,11,8,9,11,10,9,8,9,7,6,8,11,15,19,24,30,34,34,31,30,30,31,28,26,23,22,15,10,8,6,7,6,5,5,4,6,3,5,7,6,7,8,6,5,5,5,6,9,12,12,14,10,8,9,7,8,11,9,8,10,11,12,10,8,6,5,5,3,3,2,2,2,2,2,3,3,4,4,3,3,4,4,4,4,7,6,4,2,3,3,4,3,5,7,9,14,16,17,16,18,18,18,18,17,16,19,21,22,19,16,17,18,19,18,15,14,14,13,15,16,15,10,6,3,4,5,5,5,5,5,7,8,7,6,4,3,3,4,6,10,10,9,4,4,8,11,9,6,5,3,4,4];
+  const LEN=42.53, YMAX=45;
+  const CLIMBS=[
+    {s:23.92,e:24.21,d:'23,9',len:'300 m',g:11,p:'~4 %',dx:-6},
+    {s:26.85,e:26.99,d:'26,9',len:'150 m',g:12,p:'~8 %',x:'courte mais raide',dx:5},
+    {s:28.37,e:29.16,d:'28,4',len:'800 m',g:29,p:'~3,7 %',x:'pic à ~6,5 % au km 28,9'},
+    {s:32.04,e:32.53,d:'32,0',len:'500 m',g:10,p:'~2 %'},
+    {s:36.64,e:38.16,d:'36,6',len:'1 500 m',g:20,p:'~1,3 %',x:'puis faux-plat jusqu\'au km 39,5'}
+  ];
+  function renderParcours(){
+    const X=km=>Math.min(km,LEN)/LEN*1000, Y=e=>100-e/YMAX*100;
+    const pts=PROF.map((e,i)=>[X(i/10),Y(e)]);
+    const seg=c=>pts.slice(Math.round(c.s*10),Math.round(c.e*10)+1);
+    const line=p=>p.map((q,i)=>(i?'L':'M')+q[0].toFixed(1)+','+q[1].toFixed(1)).join('');
+    const area=p=>line(p)+'L'+p[p.length-1][0].toFixed(1)+',100L'+p[0][0].toFixed(1)+',100Z';
+    const ns='vector-effect="non-scaling-stroke"';
+    let h=`<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true">`
+      +[20,40].map(v=>`<line x1="0" x2="1000" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)" stroke-dasharray="4 4" ${ns}/>`).join('')
+      +`<line x1="0" x2="1000" y1="100" y2="100" stroke="var(--line)" ${ns}/>`
+      +`<path d="${area(pts)}" fill="var(--tag)"/>`
+      +CLIMBS.map(c=>`<path d="${area(seg(c))}" fill="var(--z-a)" opacity=".35"/>`).join('')
+      +`<path d="${line(pts)}" fill="none" stroke="var(--ink)" stroke-width="1.5" stroke-linejoin="round" ${ns}/>`
+      +CLIMBS.map(c=>`<path d="${line(seg(c))}" fill="none" stroke="var(--z-a)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" ${ns}/>`).join('')
+      +`</svg>`;
+    h+=[20,40].map(v=>`<span class="ax" style="top:${Y(v)}%">${v} m</span>`).join('');
+    h+=[0,10,20,30,40].map(k=>`<span class="xl" style="left:${k/LEN*100}%${k?'':';transform:none'}">${k}${k?'':' km'}</span>`).join('');
+    h+=CLIMBS.map((c,i)=>{const top=Math.min(...seg(c).map(q=>q[1]));return `<span class="bd" style="left:calc(${(c.s+c.e)/2/LEN*100}% + ${c.dx||0}px);top:${top}%">${i+1}</span>`;}).join('');
+    document.getElementById('prof').innerHTML=h;
+    document.getElementById('climbs').innerHTML='<thead><tr><th>Début</th><th>Longueur</th><th>Gain</th><th>Pente</th></tr></thead><tbody>'
+      +CLIMBS.map((c,i)=>`<tr${c.x?' class="has-sub"':''}><td><span class="km"><span class="num">${i+1}</span><b>km ${c.d}</b></span></td><td>${c.len}</td><td>+${c.g} m</td><td>${c.p}</td></tr>${c.x?`<tr class="sub"><td colspan="4">${c.x[0].toUpperCase()+c.x.slice(1)}</td></tr>`:''}`).join('')+'</tbody>';
+  }
+
   // ---------- événements ----------
   document.addEventListener('click',e=>{
     const c=e.target.closest('.session');if(c){openSheet(c.dataset.id);return;}
     const w=e.target.closest('.wk');if(w){sel=+w.dataset.w;renderWeeks();renderList();window.scrollTo({top:0});return;}
     const t=e.target.closest('[role="tab"]');
-    if(t){document.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected',b===t));document.getElementById('plan').hidden=t.dataset.tab!=='plan';document.getElementById('allures').hidden=t.dataset.tab!=='allures';}
+    if(t){document.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected',b===t));document.querySelectorAll('main>section').forEach(x=>x.hidden=x.id!==t.dataset.tab);}
   });
   document.getElementById('scrim').addEventListener('click',closeSheet);
   document.getElementById('closeBtn').addEventListener('click',closeSheet);
@@ -509,7 +567,7 @@ td.z span{display:inline-block;width:4px;height:16px;border-radius:2px;vertical-
   const vi=document.getElementById('vmaIn');vi.value=VMA;
   vi.addEventListener('input',e=>{const v=parseFloat(e.target.value);if(v>=10&&v<=25){VMA=v;store.set('acvv-vma2',VMA);renderAllures();renderList();}});
 
-  renderHeader();renderWeeks();renderList();renderAllures();
+  renderHeader();renderWeeks();renderList();renderAllures();renderParcours();
 })();
 </script>
 </body>
