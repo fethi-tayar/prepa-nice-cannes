@@ -12,7 +12,7 @@
   --bg:#F4F2EF; --panel:#F4F1EE; --card:#FFFFFF; --ink:#151515; --muted:#8C8781; --soft:#B9B4AE; --line:#E8E4E0;
   --shadow:0 1px 2px rgba(21,21,21,.04),0 6px 20px rgba(21,21,21,.05);
   --z-w:#2EAA5C; --z-e:#2EAA5C; --z-c:#1B7A3E; --z-a:#F08A24; --z-v:#C62F2F; --z-l:#3B7DDD; --z-r:#E2DCD5; --z-p:#CFC9C2;
-  --chip:#E6F27C; --chip-ink:#2A2F00; --btn:#151515; --btn-ink:#FFFFFF; --scrim:rgba(20,18,16,.45); --tag:#F1EEEA;
+  --chip:#E6F27C; --chip-ink:#2A2F00; --accent-on-btn:#E6F27C; --btn:#151515; --btn-ink:#FFFFFF; --scrim:rgba(20,18,16,.45); --tag:#F1EEEA;
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
@@ -21,13 +21,13 @@
   :root:not([data-theme="light"]){
     --bg:#121110; --panel:#191817; --card:#22201F; --ink:#F3F1EE; --muted:#9D978F; --soft:#5E5953; --line:#34302D;
     --shadow:0 1px 2px rgba(0,0,0,.3);
-    --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
+    --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --accent-on-btn:#4D5A00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
   }
 }
 :root[data-theme="dark"]{
   --bg:#121110; --panel:#191817; --card:#22201F; --ink:#F3F1EE; --muted:#9D978F; --soft:#5E5953; --line:#34302D;
   --shadow:0 1px 2px rgba(0,0,0,.3);
-  --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
+  --z-p:#4B4642; --z-r:#3E3A36; --z-w:#3CC476; --z-e:#3CC476; --z-c:#2A9A57; --z-v:#E04848; --z-l:#5A94EA; --chip-ink:#2A2F00; --accent-on-btn:#4D5A00; --btn:#F3F1EE; --btn-ink:#151515; --scrim:rgba(0,0,0,.6); --tag:#2C2927;
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -182,9 +182,42 @@ table.climbs .km{display:flex;align-items:center;gap:8px}
 table.climbs tr.sub td{border-top:0;padding-top:0;color:var(--muted);font-size:13px;white-space:normal}
 table.climbs tr.has-sub td{padding-bottom:4px}
 #parcours .est,#nutrition .est{margin:14px 0 0}
-.num.gel{background:var(--chip);color:var(--chip-ink)}
-#nutrition .desc+.desc{margin-top:10px}
 .est a{color:inherit}
+/* nutrition */
+.nut-hero .big{font-size:60px;font-weight:700;letter-spacing:-.03em;line-height:1;margin:8px 0 4px;color:var(--accent-on-btn)}
+.nut-hero .big small{font-size:17px;font-weight:500;letter-spacing:0;color:var(--btn-ink);opacity:.65;margin-left:10px}
+.pill{display:grid;place-items:center;width:22px;height:28px;border-radius:8px;background:var(--chip);color:var(--chip-ink);font-size:12px;font-weight:700;box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.pill.sm{display:inline-block;width:10px;height:13px;border-radius:4px}
+.fuel{position:relative;height:118px;margin:10px 0 4px}
+.fuel svg{position:absolute;left:0;top:34px;width:100%;height:54px}
+.fuel .base{position:absolute;left:0;right:0;top:88px;border-top:1px solid var(--line)}
+.fuel .wd,.wdot{width:7px;height:7px;border-radius:50%;background:var(--z-l)}
+.fuel .wd{position:absolute;top:88px;margin:-3.5px 0 0 -3.5px}
+.wdot{display:inline-block}
+.fuel .gline{position:absolute;top:28px;height:60px;border-left:1.5px dashed var(--ink);opacity:.28}
+.fuel .pill{position:absolute;top:0;transform:translateX(-50%)}
+.fuel .gl{position:absolute;top:97px;font-size:12px;font-weight:600;color:var(--muted);transform:translateX(-50%);white-space:nowrap}
+.flegend{display:flex;gap:18px;font-size:12px;color:var(--muted);margin:0 0 6px}
+.flegend span{display:inline-flex;align-items:center;gap:6px}
+.gel-row{display:grid;grid-template-columns:24px 1fr auto;gap:14px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.gel-row .pill{width:24px;height:30px}
+.gel-row .t{display:block;font-size:20px;font-weight:600;letter-spacing:-.01em;line-height:1.15;font-variant-numeric:tabular-nums}
+.gel-row .w{display:block;color:var(--muted);font-size:13px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.tiles .card{margin:0;display:flex;gap:12px;align-items:flex-start;padding:18px}
+.ico{flex:0 0 40px;height:40px;border-radius:12px;display:grid;place-items:center;color:#fff}
+.ico svg{width:20px;height:20px}
+.tiles h4{margin:0 0 2px;font-size:16px}
+.tiles p{margin:0;color:var(--muted);font-size:14px;line-height:1.4}
+@media (max-width:620px){.tiles{grid-template-columns:1fr}.nut-hero .big{font-size:52px}}
+@media (prefers-reduced-motion:no-preference){
+  .fuel.go svg{animation:reveal 1s cubic-bezier(.2,.8,.2,1) both}
+  .fuel.go .pill{animation:pop .45s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.3s + var(--i)*.13s)}
+  .fuel.go .gline{animation:fade .45s ease-out both;animation-delay:calc(.3s + var(--i)*.13s)}
+  @keyframes reveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+  @keyframes pop{from{opacity:0;transform:translate(-50%,10px) scale(.8)}}
+  @keyframes fade{from{opacity:0}}
+}
 .prof{touch-action:pan-y;cursor:crosshair}
 .prof .ax,.prof .xl,.prof .bd{pointer-events:none}
 .prof .cur{position:absolute;top:0;bottom:0;width:2px;margin-left:-1px;background:var(--z-l);pointer-events:none}
@@ -256,27 +289,23 @@ table.climbs tr.has-sub td{padding-bottom:4px}
   </section>
 
   <section id="nutrition" hidden>
-    <div class="card">
-      <h2 class="panel-title">Objectif : 60 g de glucides par heure</h2>
-      <p class="panel-sub">Ton gel Decathlon 1:0.8 citron apporte 40 g de glucides. Pour tenir 60 g/h, il faut donc 1 gel toutes les 40 minutes, soit environ tous les 9 à 10 km à ton allure spé.</p>
-      <div class="stats"><div><div class="lbl">Par gel</div><div class="val">40<small>g</small></div></div><div><div class="lbl">Intervalle</div><div class="val">40<small>min</small></div></div><div><div class="lbl">Gels</div><div class="val">5</div></div></div>
+    <div class="card week-sum nut-hero">
+      <span class="sum-tag">Objectif course</span>
+      <div class="big">60<small>g de glucides / heure</small></div>
+      <div class="stats"><div><div class="lbl">Par gel</div><div class="val">40<small>g</small></div></div><div><div class="lbl">Intervalle</div><div class="val">40<small>min</small></div></div><div><div class="lbl">Total</div><div class="val">5<small>gels</small></div></div></div>
     </div>
     <div class="card">
-      <h2 class="panel-title">Plan de course</h2>
-      <p class="panel-sub">Gels calés sur les ravitos. Temps de course estimés à ton allure spé moyenne.</p>
-      <div class="scroll"><table class="climbs" id="gels"></table></div>
-      <p class="est" id="gelsTot"></p>
+      <div class="ins-head"><h3>Ton plan gels</h3><span class="tag" id="gph"></span></div>
+      <div class="fuel" id="fuel"></div>
+      <div class="flegend"><span><i class="pill sm"></i>Gel</span><span><i class="wdot"></i>Point d'eau</span></div>
+      <div id="gelList"></div>
     </div>
-    <div class="card">
-      <h2 class="panel-title">Eau : prends ton gobelet</h2>
-      <p class="desc"><b>Aucun gobelet sur les ravitos.</b> Le règlement demande d'apporter ton propre contenant : gobelet pliable, flasque ou poche à eau.</p>
-      <p class="desc">Prends chaque gel avec de l'eau. Points d'eau environ tous les 2,5 km jusqu'au km 25, puis environ tous les 1,5 km. Ravitos complets (cola, électrolytes, solide) tous les 5 km, boisson isotonique aux km 20 et 30.</p>
+    <div class="tiles">
+      <div class="card"><span class="ico" style="background:var(--z-a)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4h13l-1.6 15.2a2 2 0 0 1-2 1.8H9.1a2 2 0 0 1-2-1.8z"/><path d="M6.2 9h11.6"/></svg></span><div><h4>Ton gobelet</h4><p>Aucun gobelet sur les ravitos.</p></div></div>
+      <div class="card"><span class="ico" style="background:var(--z-l)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6.4 6 11a6 6 0 0 1-12 0c0-4.6 6-11 6-11z"/></svg></span><div><h4>Gel + eau</h4><p>Toujours avec de l'eau. Point d'eau tous les 1,5 à 2,5 km.</p></div></div>
+      <div class="card"><span class="ico" style="background:var(--z-e)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="3"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M9 15l2 2 4-4"/></svg></span><div><h4>Test dimanche</h4><p>1<sup>er</sup>&nbsp;nov. : gels à −15&nbsp;min, 40&nbsp;min et 1&nbsp;h&nbsp;20.</p></div></div>
     </div>
-    <div class="card">
-      <h2 class="panel-title">À tester avant le jour J</h2>
-      <p class="desc">Dimanche 1<sup>er</sup> novembre, sur ta sortie longue (1 h 30 dont 30 min à allure marathon) : <b>un gel 15 min avant, puis à 40 min et à 1 h 20</b>. Vérifie que ton ventre le supporte et que tu arrives à le prendre en courant.</p>
-    </div>
-    <p class="est">Plan indicatif. Sources : <a href="https://www.decathlon.fr/p/gel-1-0-8-citron-co-concu-avec-decathlon-cma-cgm-x4/372903/g29m8968008" target="_blank" rel="noopener">fiche du gel Decathlon</a> (40 g de glucides, 100 mg de sodium, 2 à 3 gels max par heure), <a href="https://www.marathon06.com/2026/dl/MAM2026_reglement-individuel.pdf" target="_blank" rel="noopener">règlement MAM 2026</a> (art. 9, ravitaillements), <a href="https://www.mysportscience.com/amp/2015/01/28/3-gels-per-hour-for-the-marathon" target="_blank" rel="noopener">A. Jeukendrup</a> (environ 60 g/h pour 2 à 3 h d'effort, stratégie à tester à l'entraînement). Positions des points d'eau après le km 25 approximatives.</p>
+    <p class="est">Sources : <a href="https://www.decathlon.fr/p/gel-1-0-8-citron-co-concu-avec-decathlon-cma-cgm-x4/372903/g29m8968008" target="_blank" rel="noopener">fiche Decathlon</a> · <a href="https://www.marathon06.com/2026/dl/MAM2026_reglement-individuel.pdf" target="_blank" rel="noopener">règlement MAM 2026</a> · <a href="https://www.mysportscience.com/amp/2015/01/28/3-gels-per-hour-for-the-marathon" target="_blank" rel="noopener">A. Jeukendrup</a>. Points d'eau après le km 25 : positions approximatives.</p>
   </section>
 
   <div class="foot">
@@ -612,26 +641,34 @@ table.climbs tr.has-sub td{padding-bottom:4px}
 
   // ---------- nutrition ----------
   const GELS=[
-    {k:null,w:'Avant le départ',x:'15 min avant le coup de pistolet, avec quelques gorgées d\'eau.'},
-    {k:10,x:'Ravito complet : eau, cola, électrolytes, solide.'},
-    {k:20,x:'Ravito complet + boisson isotonique.'},
-    {k:30,x:'Ravito complet + isotonique, juste après le sommet de la montée 3 (km 29,2).'},
-    {k:38,x:'Point d\'eau le plus proche, en haut de la montée 5. Dernier gel.'}
+    {k:null,t:'Avec de l\'eau'},
+    {k:10,t:'Ravito complet'},
+    {k:20,t:'+ Isotonique'},
+    {k:30,t:'Après montée 3'},
+    {k:38,t:'Dernier gel'}
   ];
+  // points d'eau du règlement 2026 : tous les 2,5 km jusqu'au km 25, puis environ tous les 1,5 km
+  const WATER=[5,7.5,10,12.5,15,17.5,20,22.5,25,26.5,28,29.5,31,32.5,34,35.5,37,38.5,40,41.5];
   function renderNutrition(){
     const hm=t=>{const m=Math.round(t/60);return Math.floor(m/60)+':'+String(m%60).padStart(2,'0');};
-    document.getElementById('gels').innerHTML='<thead><tr><th>Gel</th><th>Où</th><th>Temps de course</th></tr></thead><tbody>'
-      +GELS.map((g,i)=>`<tr class="has-sub"><td><span class="km"><span class="num gel">${i+1}</span></span></td><td><b>${g.k===null?g.w:'km '+g.k}</b></td><td>${g.k===null?'–':'≈ '+hm(g.k*SPEmid)}</td></tr><tr class="sub"><td colspan="3">${g.x}</td></tr>`).join('')+'</tbody>';
-    const race=42.195*SPEmid, dur=race+15*60, tot=GELS.length*40;
-    document.getElementById('gelsTot').textContent=`Total : ${GELS.length} gels, ${tot} g de glucides, soit environ ${Math.round(tot/(dur/3600))} g/h sur ${hm(dur).replace(':',' h ')} (du gel de départ à l'arrivée, course estimée à ${hm(race).replace(':',' h ')}).`;
+    const P=km=>Math.min(km,LEN)/LEN*100, Yp=e=>100-e/YMAX*100;
+    const line=PROF.map(([d,e],i)=>(i?'L':'M')+(P(d)*10).toFixed(1)+','+Yp(e).toFixed(1)).join('');
+    let h=`<svg viewBox="0 0 1000 100" preserveAspectRatio="none" aria-hidden="true"><path d="${line}L1000,100L0,100Z" fill="var(--tag)"/><path d="${line}" fill="none" stroke="var(--soft)" stroke-width="1.2" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg><i class="base"></i>`;
+    h+=WATER.map(k=>`<i class="wd" style="left:${P(k)}%"></i>`).join('');
+    h+=GELS.map((g,i)=>{const x=P(g.k||0);return `<i class="gline" style="left:${x}%;--i:${i}"></i><span class="pill" style="left:${x}%;--i:${i}">${i+1}</span><span class="gl" style="left:${x}%${g.k?'':';transform:none'}">${g.k?'km '+g.k:'Départ'}</span>`;}).join('');
+    const fuel=document.getElementById('fuel'); fuel.innerHTML=h; fuel.setAttribute('aria-label','Gels aux km '+GELS.filter(g=>g.k).map(g=>g.k).join(', ')+', plus un avant le départ');
+    document.getElementById('gelList').innerHTML=GELS.map((g,i)=>`<div class="gel-row"><span class="pill">${i+1}</span><div><b class="t">${g.k===null?'−15 min':hm(g.k*SPEmid)}</b><span class="w">${g.k===null?'avant le départ':'km '+g.k}</span></div><span class="tag">${g.t.toUpperCase()}</span></div>`).join('');
+    const race=42.195*SPEmid, dur=race+15*60;
+    document.getElementById('gph').textContent=`≈ ${Math.round(GELS.length*40/(dur/3600))} G/H`;
   }
+  function replayFuel(){const f=document.getElementById('fuel');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');}
 
   // ---------- événements ----------
   document.addEventListener('click',e=>{
     const c=e.target.closest('.session');if(c){openSheet(c.dataset.id);return;}
     const w=e.target.closest('.wk');if(w){sel=+w.dataset.w;renderWeeks();renderList();window.scrollTo({top:0});return;}
     const t=e.target.closest('[role="tab"]');
-    if(t){document.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected',b===t));document.querySelectorAll('main>section').forEach(x=>x.hidden=x.id!==t.dataset.tab);}
+    if(t){document.querySelectorAll('[role="tab"]').forEach(b=>b.setAttribute('aria-selected',b===t));document.querySelectorAll('main>section').forEach(x=>x.hidden=x.id!==t.dataset.tab);if(t.dataset.tab==='nutrition')replayFuel();}
   });
   document.getElementById('scrim').addEventListener('click',closeSheet);
   document.getElementById('closeBtn').addEventListener('click',closeSheet);
